@@ -67,8 +67,8 @@ echo "127.0.0.1    $hostname" >> /etc/hosts
 
 echo -e '\n\t Grub\n'
 pacman -S grub efibootmgr
-sed -i "s/GRUB_TIMEOUT=5/GRUB_TIMEOUT=$grubtimeout" /etc/default/grub
-sed -i "s/quiet/quiet\ resume=\\$swap_partition\ ipv6.disable=1" /etc/default/grub
+sed -i "s/GRUB_TIMEOUT=5/GRUB_TIMEOUT=$grubtimeout/" /etc/default/grub
+sed -i "s/quiet/quiet\ resume=\\$swap_partition\ ipv6.disable=1/" /etc/default/grub
 grub-install --target="$grubtarget" --efi-directory="$efidirectory" --bootloader-id="$bootloaderid" --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
 
@@ -85,19 +85,12 @@ echo -e '\n\t Services\n'
 systemctl enable NetworkManager
 systemctl enable bluetooth
 
-echo -e '\n\t Password\n'
-passwd
-
 echo -e '\n\t User\n'
-useradd -m -G "$usergroup" -s "$usersh" "$user"
-passwd "$user"
+useradd -m -G $usergroup -s $usersh $user
+passwd $user
 
-echo -e '\n\t Aur helper\n'
-git clone https://aur.archlinux.org/paru
-cd paru
-make -sri
-cd ..
-rm -rf paru
+echo -e '\n\t Root password\n'
+passwd
 
 echo -e '\n\t Execute umount -R /mnt && reboot\n'
 exit
