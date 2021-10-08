@@ -48,7 +48,8 @@ rankmirrors -n 10 /etc/pacman.d/mirrorlist.bak > /etc/pacman.d/mirrorlist
 echo -e '\n\t Format the partitions'
 mkfs.fat -F 32 "$efi_partition"
 mkswap "$swap_partition"
-mkfs.ext4 {"$root_partition","$home_partition"}
+mkfs.ext4 "$root_partition"
+mkfs.ext4 "$home_partition"
 
 echo -e '\n\t Mount the file systems'
 mount -t ext4 "$root_partition" /mnt
