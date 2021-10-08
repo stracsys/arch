@@ -27,7 +27,7 @@ case "$disk" in
 esac
 
 if [ ! $(echo "$USER") = 'root' ];then
-   echo -e "\n\t You must be root for execute this script"
+   echo -e '\n\t You must be root for execute this script\n'
    exit 1
 fi
 
@@ -36,22 +36,22 @@ if [ ! -e "$efi_partition" ] ||
    [ ! -e "$root_partition" ] ||
    [ ! -e "$home_partition" ]
 then 
-   echo -e '\n\t Execute this script after partitionning the disk'
+   echo -e '\n\t Execute this script after partitionning the disk\n'
    exit 1
 fi
 
-echo -e '\n\t Mirrorlist setup'
+echo -e '\n\t Mirrorlist setup\n'
 pacman -S pacman-contrib
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
 rankmirrors -n 10 /etc/pacman.d/mirrorlist.bak > /etc/pacman.d/mirrorlist
 
-echo -e '\n\t Format the partitions'
+echo -e '\n\t Format the partitions\n'
 mkfs.fat -F 32 "$efi_partition"
 mkswap "$swap_partition"
 mkfs.ext4 "$root_partition"
 mkfs.ext4 "$home_partition"
 
-echo -e '\n\t Mount the file systems'
+echo -e '\n\t Mount the file systems\n'
 mount -t ext4 "$root_partition" /mnt
 mkdir /mnt/home
 mkdir "$efidirectory"
@@ -59,14 +59,14 @@ mount -t ext4 "$home_partition" /mnt/home
 mount -t vfat "$efi_partition" "$efidirectory"
 swapon "$swap_partition"
 
-echo -e '\n\t Install base package'
+echo -e '\n\t Install base package\n'
 pacstrap /mnt base
 
-echo -e '\n\t Generate fstab'
+echo -e '\n\t Generate fstab\n'
 genfstab -U -p /mnt >> /mnt/etc/fstab
 
 echo -e '\n\t Copy archcroot_install and chroot to /mnt'
-echo -e '\t Execute archcroot_install script to continue installation'
+echo -e '\t Execute archcroot_install script to continue installation\n'
 cp archchroot_install.sh /mnt/root
 arch-chroot /mnt
 

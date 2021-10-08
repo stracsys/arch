@@ -31,26 +31,26 @@ case "$disk" in
 esac
 
 if [ ! $(echo "$USER") = 'root' ];then
-   echo -e '\n\t You must be root for execute this script'
+   echo -e '\n\t You must be root for execute this script\n'
    exit 1
 fi
 
-echo -e '\n\t Install essential package'
+echo -e '\n\t Install essential package\n'
 pacman -S linux-zen linux-zen-headers linux-firmware
 pacman -S mtools dosfstools lsb-release ntfs-3g exfat-utils
-pacman -S networkmanager
+pacman -S networkmanager bluez
 pacman -S vim
 pacman -S man-db man-pages texinfo
 pacman -S base-devel git
 pacman -S bash-completion zsh zsh-completions
 
-echo -e '\n\t Configure the system'
+echo -e '\n\t Configure the system\n'
 
-echo -e '\n\t Time zone'
+echo -e '\n\t Time zone\n'
 ln -sf "/usr/share/zoneinfo/$timezone"
 hwclock --systohc
 
-echo -e '\n\t Localization'
+echo -e '\n\t Localization\n'
 sed -i "s/#$lang/$lang/" /etc/locale.gen
 locale-gen
 echo "LANG=$lang" > /etc/locale.conf
@@ -59,42 +59,45 @@ echo "KEYMAP=$keymap" > /etc/vconsole.conf
 echo "FONT=$font" >> /etc/vconsole.conf
 export "LANG=$lang"
 
-echo -e '\n\t Network configuration'
+echo -e '\n\t Network configuration\n'
 echo "$hostname" > /etc/hostname
 echo '127.0.0.1    localhost' >> /etc/hosts
 echo '::1          localhost' >> /etc/hosts
 echo "127.0.0.1    $hostname" >> /etc/hosts
 
-echo -e '\n\t Grub'
+echo -e '\n\t Grub\n'
 pacman -S grub efibootmgr
 sed -i "s/GRUB_TIMEOUT=5/GRUB_TIMEOUT=$grubtimeout" /etc/default/grub
 sed -i "s/quiet/quiet\ resume=\\$swap_partition\ ipv6.disable=1" /etc/default/grub
 grub-install --target="$grubtarget" --efi-directory="$efidirectory" --bootloader-id="$bootloaderid" --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
 
-echo -e '\n\t Mkinitcpio'
+echo -e '\n\t Mkinitcpio\n'
 sed -i 's/HOOKS=(base\ udev\ autodetect\ modconf\ block\ filesystems\ keyboard\ fsck)/HOOKS=(base\ udev\ resume\ autodetect\ modconf\ block\ filesystems\ keyboard\ fsck)' /etc/mkinitcpio.conf
 mkinitcpio -p linux-zen
 
-echo -e '\n\t Other stuff'
+echo -e '\n\t Other stuff\n'
 echo 'vm.swappiness=10' > /etc/sysctl.d/99-sysctl.conf
 echo 'blacklist pcspkr' > /etc/modprobe.d/nobeep.conf
 echo 'blacklist iTCO_wdt' > /etc/modprobe.d/nowatchdog.conf
 
-echo -e '\n\t Services'
+echo -e '\n\t Services\n'
 systemctl enable NetworkManager
+systemctl enable bluetooth
 
-echo -e '\n\t Password'
+echo -e '\n\t Password\n'
 passwd
 
-echo -e '\n\t User'
+echo -e '\n\t User\n'
 useradd -m -G "$usergroup" -s "$usersh" "$user"
 passwd "$user"
 
-echo -e '\n\t Aur helper'
+echo -e '\n\t Aur helper\n'
 git clone https://aur.archlinux.org/paru
 cd paru
 make -sri
+cd ..
+rm -rf paru
 
-echo -e '\n\t Execute umount -R /mnt && reboot'
+echo -e '\n\t Execute umount -R /mnt && reboot\n'
 exit
