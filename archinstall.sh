@@ -41,7 +41,7 @@ then
 fi
 
 echo -e '\n\t Mirrorlist setup\n'
-pacman -S pacman-contrib
+pacman --noconfirm -S pacman-contrib
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
 rankmirrors -n 10 /etc/pacman.d/mirrorlist.bak > /etc/pacman.d/mirrorlist
 

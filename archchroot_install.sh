@@ -36,13 +36,13 @@ if [ ! $(echo "$USER") = 'root' ];then
 fi
 
 echo -e '\n\t Install essential package\n'
-pacman -S linux-zen linux-zen-headers linux-firmware
-pacman -S mtools dosfstools lsb-release ntfs-3g exfat-utils
-pacman -S networkmanager bluez
-pacman -S vim
-pacman -S man-db man-pages texinfo
-pacman -S base-devel git
-pacman -S bash-completion zsh zsh-completions
+pacman --noconfirm -S linux-zen linux-zen-headers linux-firmware
+pacman --noconfirm -S mtools dosfstools lsb-release ntfs-3g exfat-utils
+pacman --noconfirm -S networkmanager bluez
+pacman --noconfirm -S vim
+pacman --noconfirm -S man-db man-pages texinfo
+pacman --noconfirm -S base-devel git
+pacman --noconfirm -S bash-completion zsh zsh-completions
 
 echo -e '\n\t Configure the system\n'
 
