@@ -92,5 +92,5 @@ passwd "$user"
 echo -e '\n\t Root password\n'
 passwd
 
+echo -e '\n\t Execute rm archchroot_install.sh && exit'
 echo -e '\n\t Execute umount -R /mnt && reboot\n'
-exit
