@@ -5,7 +5,7 @@
 disk='nvme'
 
 user='trac'
-usergroup='wheel rfkill video'
+usergroup='wheel,rfkill,video'
 usersh='/bin/zsh'
 
 hostname='tracsys'
@@ -20,13 +20,13 @@ bootloaderid='ARCH_GRUB'
 
 case "$disk" in
    'nvme')
-      swap_partition='/dev/nvme0n1p2'
+      swap_partition='/dev\/nvme0n1p2'
       ;;
    'sda')
-      swap_partition='/dev/sda2'
+      swap_partition='/dev\/sda2'
       ;;
    'vda')
-      swap_partition='/dev/vda2'
+      swap_partition='/dev\/vda2'
       ;;
 esac
 
@@ -47,7 +47,7 @@ pacman -S bash-completion zsh zsh-completions
 echo -e '\n\t Configure the system\n'
 
 echo -e '\n\t Time zone\n'
-ln -sf "/usr/share/zoneinfo/$timezone"
+ln -sf "/usr/share/zoneinfo/$timezone" /etc/localtime
 hwclock --systohc
 
 echo -e '\n\t Localization\n'
@@ -73,7 +73,7 @@ grub-install --target="$grubtarget" --efi-directory="$efidirectory" --bootloader
 grub-mkconfig -o /boot/grub/grub.cfg
 
 echo -e '\n\t Mkinitcpio\n'
-sed -i 's/HOOKS=(base\ udev\ autodetect\ modconf\ block\ filesystems\ keyboard\ fsck)/HOOKS=(base\ udev\ resume\ autodetect\ modconf\ block\ filesystems\ keyboard\ fsck)' /etc/mkinitcpio.conf
+sed -i 's/HOOKS=(base\ udev\ autodetect\ modconf\ block\ filesystems\ keyboard\ fsck)/HOOKS=(base\ udev\ resume\ autodetect\ modconf\ block\ filesystems\ keyboard\ fsck)/' /etc/mkinitcpio.conf
 mkinitcpio -p linux-zen
 
 echo -e '\n\t Other stuff\n'
@@ -85,9 +85,9 @@ echo -e '\n\t Services\n'
 systemctl enable NetworkManager
 systemctl enable bluetooth
 
-echo -e '\n\t User\n'
-useradd -m -G $usergroup -s $usersh $user
-passwd $user
+echo -e '\n\t User password\n'
+useradd -m -G "$usergroup" -s "$usersh" "$user"
+passwd "$user"
 
 echo -e '\n\t Root password\n'
 passwd
